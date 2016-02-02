@@ -1,0 +1,63 @@
+.container{
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-size: 20px;
+    
+    width: 400px;
+    height: 644px; /* canvas + infobar */
+	margin: 0 auto;
+    border: solid;
+    background-image: url("./background.jpg");
+}
+
+.title{
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	font-size: 50px;
+	padding: 60px 0;
+	margin: 0;
+}
+
+.page{
+    height: 100%;
+}
+
+#game-page{
+	background: #0072C6;
+}
+
+#home-page{
+    background: rgba(256, 256, 256, .8);
+    text-align: center;
+    color: #000;
+}
+
+.btn{
+	padding: 20px;
+	font-size: 100%;
+	color: black;
+    border: 6px solid;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.btn.active{
+    background: #BBDEFB;
+}
+
+.btn:hover{
+	animation: button-pulse 1s linear infinite;
+}
+
+@keyframes button-pulse{
+	from { transform: scale(1); }
+	50% { transform: scale(1.1); }
+	to { transform: scale(1); }
+}
+
+#btn_StartGame{
+    background: #76FF03;
+    width: 70%; 
+    font-weight: bold;
+    margin: 0;
+}
