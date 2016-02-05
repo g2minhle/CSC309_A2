@@ -9,7 +9,7 @@
 
 <body>
     <div class="container">
-        <div id="div-homePage" class="page">
+        <div id="div-homePage" class="page ">
             <h1 class="title">TAP TAP BUG</h1>
 
             <div>
@@ -26,7 +26,7 @@
                 <h1 id="h1-highScore">0</h1>
             </div>
 
-            <button id="btn-StartGame" class="btn"> START GAME </button>
+            <button id="btn-startGame" class="btn"> START GAME </button>
         </div>
 
         <div id="div-gamePage" class="page hide">
@@ -35,17 +35,27 @@
                     <label> sec</label>
                 </div>
                 <div class="command">
-                    <button class="game-command">&#10074;&#10074;</button>
+                    <button id="btn-gameCommand" class="btn">&#10074;&#10074;</button>
                 </div>
                 <div class="score">
                     <label>Score: </label><span id="score-content">00</span>
                 </div>
             </div>
-            <canvas id="game"></canvas>
+            <canvas id="game-canvas"></canvas>
+
+            <div id="div-levelStarting" class="pop-up hide">
+                <h1 id="h1-levelStating">LEVEL 1</h1>
+            </div>
+            <div id="div-countDown" class="pop-up pop-up-count-down hide">
+                <h1 id="h1-countDown">1</h1>
+            </div>
+
         </div>
     </div>
 
     <script src="./myLib.js "></script>
+    <script src="./food.js "></script>
+    <script src="./bug.js "></script>
     <script src="./gameScript.js "></script>
     <script src="./homeScript.js "></script>
 </body>

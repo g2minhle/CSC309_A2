@@ -1,4 +1,4 @@
-    .container{
+.container{
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 20px;
     
@@ -21,7 +21,7 @@
 }
 
 #div-gamePage{
-    background: rgba(256, 256, 256, 1);
+    background: #FFF59D;
 }
 
 #div-homePage{
@@ -65,7 +65,7 @@
 	to { transform: scale(1); }
 }
 
-#btn-StartGame{
+#btn-startGame{
     background: #76FF03;
     width: 70%; 
     font-weight: bold;
@@ -101,6 +101,37 @@
 .status-bar > .command{
     width: 40%;
     float: left;
-    padding-top: 10px;
     text-align: center;
+    padding-top: 2px;
+}
+
+#btn-gameCommand{
+    padding: 10px;
+	font-size: 50%;
+	color: black;
+    font-weight: bold;
+    border: 3px solid;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 50%;
+        
+}
+
+.pop-up{
+    font-family: Courier New, Courier, monospace;
+    letter-spacing: 3px; 
+    width: 80%;
+    text-align: center;
+    margin: 10%;
+    color: white;
+    background-color: #3F51B5;
+    box-shadow: 10px 10px 5px #888888;
+}
+
+.pop-up.pop-up-count-down{
+    font-family: fantasy;
+   
+   background-color: transparent;
+   color: black;
+   box-shadow: none;
 }

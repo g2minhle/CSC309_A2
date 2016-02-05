@@ -2,7 +2,7 @@ var homePage = {
     selectedLevel: 1,
     savedHighScore: {},
 
-    btn_startGameButton: document.getElementById('btn-StartGame'),
+    btn_startGameButton: document.getElementById('btn-startGame'),
     btn_levelButtons: document.getElementsByClassName('btn-level'),
     h1_highScore: document.getElementById('h1-highScore'),
 
@@ -20,10 +20,16 @@ var homePage = {
         homePage.h1_highScore.innerHTML = homePage.savedHighScore[this.value];
     },
 
+    _onStartGameClicked: function (e) {
+        console.log('Start game button clicked');
+        myLib.hide(tapTapBug.div_homePage);
+        gamePage.startGame(homePage.selectedLevel);
+    },
+
     init: function () {
         console.log('Start init game');
-        
-        
+
+
         homePage.savedHighScore = localStorage.getItem("ttb_homePage_savedHighScore");
         if (!(homePage.savedHighScore)) {
             homePage.savedHighScore = {
@@ -33,13 +39,7 @@ var homePage = {
         }
         homePage.h1_highScore.innerHTML = homePage.savedHighScore["1"];
 
-
-        homePage.btn_startGameButton.addEventListener(
-            'click',
-            function (e) {
-                console.log('Start game button clicked');
-                gamePage.startGame(homePage.selectedLevel);
-            });
+        homePage.btn_startGameButton.addEventListener('click', homePage._onStartGameClicked);
 
         myLib.forEach(homePage.btn_levelButtons,
             function (currentLevelButton) {
