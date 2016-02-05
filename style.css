@@ -1,4 +1,4 @@
-.container{
+    .container{
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size: 20px;
     
@@ -13,21 +13,20 @@
 	font-family: "Comic Sans MS", cursive, sans-serif;
 	font-size: 50px;
 	padding: 60px 0;
-	margin: 0;
+	margin: 0;    
 }
 
 .page{
     height: 100%;
 }
 
-#game-page{
-	background: #0072C6;
+#div-gamePage{
+    background: rgba(256, 256, 256, 1);
 }
 
-#home-page{
-    background: rgba(256, 256, 256, .8);
+#div-homePage{
+    background: rgba(253, 216, 53, .8);
     text-align: center;
-    color: #000;
 }
 
 .btn{
@@ -41,13 +40,24 @@
     margin-right: 20px;
 }
 
+.btn.fade{
+    opacity: 0.6;    
+}
+
 .btn.active{
-    background: #BBDEFB;
+    background: #F44336;
+    font-weight: bold;
+    animation: button-pulse 1s linear infinite;
 }
 
 .btn:hover{
 	animation: button-pulse 1s linear infinite;
 }
+
+.btn:focus{
+	animation: button-pulse 1s linear infinite;
+}
+
 
 @keyframes button-pulse{
 	from { transform: scale(1); }
@@ -55,9 +65,42 @@
 	to { transform: scale(1); }
 }
 
-#btn_StartGame{
+#btn-StartGame{
     background: #76FF03;
     width: 70%; 
     font-weight: bold;
     margin: 0;
+}
+
+.hide{
+    display: none;
+}
+
+.status-bar{
+    height: 44px;
+    
+    background: #3F51B5;
+    font-weight: bold;
+    color: white;
+}
+
+.status-bar > .clock{
+    width: 30%;
+    float: left;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.status-bar > .score{
+    width: 30%;    
+    float: left;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.status-bar > .command{
+    width: 40%;
+    float: left;
+    padding-top: 10px;
+    text-align: center;
 }

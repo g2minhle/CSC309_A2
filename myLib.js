@@ -4,7 +4,7 @@ var myLib = {
             object.className += ' ' + newClassName;
         }
     },
-    
+
     removeClass: function (object, className) {
         var currentClassName = object.className;
         while (currentClassName.indexOf(className) != -1) {
@@ -15,10 +15,15 @@ var myLib = {
         }
         object.className = currentClassName.trim();
     },
-    
-    forEach: function(array, myFunction){
+
+    forEach: function (array, myFunction) {
         for (var i = 0; i < array.length; i++) {
             myFunction(array[i]);
         }
     },
 }
+
+var tapTapBug = {
+    div_gamePage: document.getElementById('div-gamePage'),
+    div_homePage: document.getElementById('div-homePage'),
+};

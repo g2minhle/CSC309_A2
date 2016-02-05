@@ -9,7 +9,7 @@
 
 <body>
     <div class="container">
-        <div id="home-page" class="page">
+        <div id="div-homePage" class="page">
             <h1 class="title">TAP TAP BUG</h1>
 
             <div>
@@ -17,18 +17,37 @@
             </div>
 
             <div>
-                <button id="btn_Level1" class="btn active btn-level"> Level 1 </button>
-                <button id="btn_Level2" class="btn fade"> Level 2 </button>
+                <button id="btn-Level1" class="btn active btn-level" value="1"> Level 1 </button>
+                <button id="btn-Level2" class="btn fade btn-level" value="2"> Level 2 </button>
             </div>
 
             <div>
-                <h2>High Score<h2>
-                <h1>0<h1>
+                <h2>High Score</h2>
+                <h1 id="h1-highScore">0</h1>
             </div>
 
-            <button id="btn_StartGame" class="btn"> START GAME </button>
-        </div>        
+            <button id="btn-StartGame" class="btn"> START GAME </button>
+        </div>
+
+        <div id="div-gamePage" class="page hide">
+            <div class="status-bar">
+                <div class="clock"><span id="timer-content">0</span>
+                    <label> sec</label>
+                </div>
+                <div class="command">
+                    <button class="game-command">&#10074;&#10074;</button>
+                </div>
+                <div class="score">
+                    <label>Score: </label><span id="score-content">00</span>
+                </div>
+            </div>
+            <canvas id="game"></canvas>
+        </div>
     </div>
+
+    <script src="./myLib.js "></script>
+    <script src="./gameScript.js "></script>
+    <script src="./homeScript.js "></script>
 </body>
 
 </html>
