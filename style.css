@@ -53,7 +53,7 @@
 .btn:hover{
 	animation: button-pulse 1s linear infinite;
 }
-
+    
 .btn:focus{
 	animation: button-pulse 1s linear infinite;
 }
@@ -65,11 +65,19 @@
 	to { transform: scale(1); }
 }
 
-#btn-startGame{
+.btn#btn-startGame{
+    width: 70%;
+    margin: 0; 
+}
+
+.btn.btn-startGame{
     background: #76FF03;
-    width: 70%; 
     font-weight: bold;
-    margin: 0;
+}
+
+.btn.btn-red{
+    font-weight: bold;
+    background: #F44336;
 }
 
 .hide{
@@ -125,13 +133,24 @@
     margin: 10%;
     color: white;
     background-color: #3F51B5;
+    margin-top: 40%;
     box-shadow: 10px 10px 5px #888888;
 }
 
 .pop-up.pop-up-count-down{
+    margin: 10%;
     font-family: fantasy;
-   
-   background-color: transparent;
-   color: black;
-   box-shadow: none;
+    font-size: 300%;     
+    color: black;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.pop-up.pop-up-button{
+    width: 100%;
+    margin: 0%;
+    float: left;
+    color: black;
+    background-color: transparent;
+    box-shadow: none;
 }

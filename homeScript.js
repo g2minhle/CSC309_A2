@@ -28,8 +28,7 @@ var homePage = {
 
     init: function () {
         console.log('Start init game');
-
-
+        myLib.show(tapTapBug.div_homePage);
         homePage.savedHighScore = localStorage.getItem("ttb_homePage_savedHighScore");
         if (!(homePage.savedHighScore)) {
             homePage.savedHighScore = {
@@ -39,7 +38,9 @@ var homePage = {
         }
         homePage.h1_highScore.innerHTML = homePage.savedHighScore["1"];
 
-        homePage.btn_startGameButton.addEventListener('click', homePage._onStartGameClicked);
+        homePage.btn_startGameButton.addEventListener(
+            'click',
+            homePage._onStartGameClicked);
 
         myLib.forEach(homePage.btn_levelButtons,
             function (currentLevelButton) {

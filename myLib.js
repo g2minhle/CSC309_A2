@@ -33,8 +33,8 @@ var myLib = {
     getRandomNumber: function (min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    
-    removeAt:function (array, index){
+
+    removeAt: function (array, index) {
         array.splice(index, 1);
     },
 }
@@ -47,6 +47,12 @@ var myPhysicLib = {
             && obj1.x + obj1.width > obj2.x
             && obj1.y < obj2.y + obj2.height
             && obj1.height + obj1.y > obj2.y);
+    },
+
+    distanceBetween: function (obj1, obj2) {
+        var v1 = Math.pow((obj1.x - obj2.x), 2);
+        var v2 = Math.pow((obj1.y - obj2.y), 2);
+        return Math.sqrt(v1 + v2, 2);
     }
 }
 
@@ -63,13 +69,13 @@ function Timer(fn, countdown, repeat) {
         clearTimeout(ident);
         total_time_run = _time_diff(start_time, new Date().getTime());
     }
-    
-    function work(){
+
+    function work() {
         fn();
-        if(repeat){
+        if (repeat) {
             start_time = new Date().getTime(),
             ident = setTimeout(fn, countdown);
-        }   
+        }
     }
 
     function resume() {

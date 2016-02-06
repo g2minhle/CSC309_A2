@@ -26,13 +26,13 @@
                 <h1 id="h1-highScore">0</h1>
             </div>
 
-            <button id="btn-startGame" class="btn"> START GAME </button>
+            <button id="btn-startGame" class="btn btn-startGame"> START GAME </button>
         </div>
 
         <div id="div-gamePage" class="page hide">
             <div class="status-bar">
-                <div class="clock"><span id="timer-content">0</span>
-                    <label> sec</label>
+                <div class="clock"><span id="span-timerContent">0</span>
+                    <label>sec</label>
                 </div>
                 <div class="command">
                     <button id="btn-gameCommand" class="btn">&#10074;&#10074;</button>
@@ -41,14 +41,26 @@
                     <label>Score: </label><span id="score-content">00</span>
                 </div>
             </div>
-            <canvas id="game-canvas"></canvas>
 
             <div id="div-levelStarting" class="pop-up hide">
                 <h1 id="h1-levelStating">LEVEL 1</h1>
+                <h1 id="h1-endGame">GAME OVER</h1>
             </div>
+            
             <div id="div-countDown" class="pop-up pop-up-count-down hide">
                 <h1 id="h1-countDown">1</h1>
+            </div>            
+            
+            <div id="div-endGame" class="pop-up hide">
+                
             </div>
+            
+            <div id="div-endGameButton" class="pop-up hide pop-up-button">
+                <button id="btn-endGameButtonRetry" class="btn btn-startGame" value="1"> Retry </button>
+                <button id="btn-endGameBackToMenu" class="btn btn-red" value="2"> Back To Menu </button>
+            </div>
+            
+            <canvas id="game-canvas"></canvas>
 
         </div>
     </div>

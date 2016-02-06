@@ -48,22 +48,40 @@ var foodManager = {
     },
 
     drawFood: function (gameCanvas) {
-        console.log("drawFood");
+        //console.log("drawFood");
         for (var i = foodManager.allFood.length - 1; i > -1; i--) {
             var food = foodManager.allFood[i];
             if (!food.available) {
-                food.opacity -= 2;
-                if (food.opacity == 0) {
+                //console.log("Fade food");   
+                foodManager.allFood[i].opacity -= 0.02;
+                if (foodManager.allFood[i].opacity <= 0) {
                     myLib.removeAt(foodManager.allFood, i);
                     continue;
                 }
             }
-            gameCanvas.globalAlpha = food.opacity;
+            gameCanvas.globalAlpha = foodManager.allFood[i].opacity;
+            gameCanvas.rect(food.x, food.y, foodManager.FOOD_WIDTH, foodManager.FOOD_HEIGHT);
+            gameCanvas.stroke();
+
             gameCanvas.drawImage(
                 foodManager.foodImage,
                 food.x, food.y,
                 foodManager.FOOD_WIDTH, foodManager.FOOD_HEIGHT);
-            gameCanvas.globalAlpha = 1.0;
+            gameCanvas.globalAlpha = 1;
         };
+    },
+
+    updateFoodCondition: function (bugs) {
+        var i, j = 0;
+        for (i = 0; i < foodManager.allFood.length; i++) {
+            if (!foodManager.allFood[i].available) continue;
+            for (j = 0; j < bugs.length; j++) {
+                //console.log("Test food and bug");
+                if (myPhysicLib.hasCollision(foodManager.allFood[i], bugs[j])) {
+                    console.log("Lost food" + i);
+                    foodManager.allFood[i].available = false;
+                }
+            }
+        }
     }
 }
