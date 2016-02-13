@@ -26,17 +26,24 @@ var homePage = {
         gamePage.startGame(homePage.selectedLevel);
     },
 
+    saveHighScore: function (level, score) {
+        if (homePage.savedHighScore[level] < score){
+            homePage.savedHighScore[level] = score;
+            localStorage.setItem('ttb_homePage_savedHighScore', homePage.savedHighScore);
+        } 
+    },
+
     init: function () {
         console.log('Start init game');
         myLib.show(tapTapBug.div_homePage);
-        homePage.savedHighScore = localStorage.getItem("ttb_homePage_savedHighScore");
+        homePage.savedHighScore = localStorage.getItem('ttb_homePage_savedHighScore');
         if (!(homePage.savedHighScore)) {
             homePage.savedHighScore = {
                 1: 0,
                 2: 0
             }
         }
-        homePage.h1_highScore.innerHTML = homePage.savedHighScore["1"];
+        homePage.h1_highScore.innerHTML = homePage.savedHighScore['1'];
 
         homePage.btn_startGameButton.addEventListener(
             'click',

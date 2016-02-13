@@ -16,14 +16,16 @@ var gameEngine = {
     _gameLost: function () {
         gameEngine.pauseGame();
         gamePage.gameOver();
+        homePage.saveHighScore(gameEngine.selectedLevel, gameEngine.gameScore);
     },
 
     _gameWon: function () {
         gameEngine.pauseGame();
+        homePage.saveHighScore(gameEngine.selectedLevel, gameEngine.gameScore);
         if (gameEngine.selectedLevel == 1) {
-            gamePage.startGame(gamePage.selectedLevel);
+            gamePage.startGame(gamePage.selectedLevel + 1);
         } else {
-            
+            // TODO: done game 
         }
     },
 
@@ -31,7 +33,6 @@ var gameEngine = {
         gameEngine.timeLeft--;
         gamePage.setClock(gameEngine.timeLeft);
         if (gameEngine.timeLeft == 0) {
-            // TODO: you wont the game
             gameEngine._gameWon();
         }
     },
