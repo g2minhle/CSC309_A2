@@ -211,7 +211,7 @@ var bugManager = {
                 // checking that it is not the same bug
                 if(i != j){
                     if( myPhysicLib.distanceBetween(currentBug,otherBug) < distance_sqrt){
-                        bugManager.lessPriorityBug(currentBug,otherBug).x = bugManager.lessPriorityBug(currentBug,otherBug).x -25;
+                        bugManager.lessPriorityBug(currentBug,otherBug).x = bugManager.lessPriorityBug(currentBug,otherBug).x -10;
                     }
                     else{
                         return;
