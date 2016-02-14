@@ -196,6 +196,7 @@ var bugManager = {
                 if (dist <= killDistance) {
                     gameEngine.addScore(bugManager.BUG_TYPE[currBug.bugType].score);
                     currBug.alive = false;
+                    var scoreDisplay = document.getElementById('score-content').innerHTML = gameEngine.gameScore;
                 }
             }
 
