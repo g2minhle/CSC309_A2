@@ -49,11 +49,20 @@ var myPhysicLib = {
             && obj1.height + obj1.y > obj2.y);
     },
 
+    getCenterObject: function(obj1){
+        return {
+                x: obj1.x + obj1.width / 2, 
+                y: obj1.y + obj1.height / 2,
+        };
+    },
+    
     distanceBetween: function (obj1, obj2) {
-        var v1 = Math.pow((obj1.x - obj2.x), 2);
-        var v2 = Math.pow((obj1.y - obj2.y), 2);
+        var point1 = myPhysicLib.getCenterObject(obj1),
+            point2 = myPhysicLib.getCenterObject(obj2),
+            v1 = Math.pow((point1.x - point2.x), 2),
+            v2 = Math.pow((point1.y - point2.y), 2);
         return Math.sqrt(v1 + v2, 2);
-    }
+    }   
 }
 
 function Timer(fn, countdown, repeat) {

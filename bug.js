@@ -7,8 +7,8 @@ var bugManager = {
             color: 'black',
             score: 5,
             speed: {
-                1: 200,
-                2: 150,
+                1: 150,
+                2: 200,
             }
         },
         {
@@ -157,17 +157,29 @@ var bugManager = {
             if (!bug.alive) continue;
             var nearestFood = bugManager._getNearestFoodFromBug(bug, allFood);
             if (nearestFood == null) return;
-            if (nearestFood.x - bug.x > 0) {
-                bug.x += 1;
-            } else if (nearestFood.x - bug.x < 0) {
-                bug.x -= 1;
-            }
-
-            if (nearestFood.y - bug.y > 0) {
-                bug.y += 1;
-            } else if (nearestFood.y - bug.y < 0) {
-                bug.y -= 1;
-            }
+            var centerBug = myPhysicLib.getCenterObject(bug),
+                centerFood = myPhysicLib.getCenterObject(nearestFood),
+                moveVector = {
+                    x: centerFood.x - centerBug.x,
+                    y: centerFood.y - centerBug.y
+                },
+                moveVectorLen = Math.sqrt(
+                                      Math.pow(moveVector.x, 2) 
+                                    + Math.pow(moveVector.y, 2), 
+                                      2),
+                unitMoveVectorLen = {
+                    x: moveVector.x / moveVectorLen,
+                    y: moveVector.y / moveVectorLen
+                },
+                bugSpeed = bugManager.BUG_TYPE[bug.bugType].speed[bugManager.selectedLevel] / gameEngine.GAME_FPS,
+                finalMoveVectorLen = {
+                    //x:1,
+                    //y:1,
+                    x: unitMoveVectorLen.x * bugSpeed,
+                    y: unitMoveVectorLen.y * bugSpeed
+                };
+            bug.x += finalMoveVectorLen.x;
+            bug.y += finalMoveVectorLen.y;
         }
     },
     //function to kill bug
