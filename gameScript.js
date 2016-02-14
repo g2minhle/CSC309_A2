@@ -68,6 +68,7 @@ var gameEngine = {
         clearInterval(gameEngine.gameLoopPID);
         clearInterval(gameEngine.gameTimerPID);
         bugManager.pauseBugCreation();
+        GAME_PAUSED = true;
     },
 
 
