@@ -10,6 +10,7 @@ var gameEngine = {
     gameLoopPID: 0,
     gameTimerPID: 0,
     timeLeft: 0,
+    GAME_PAUSED: false,
 
     gameContext: document.getElementById('game-canvas').getContext('2d'),
 
@@ -60,6 +61,7 @@ var gameEngine = {
 
         bugManager.drawBug(gameEngine.gameContext);
         foodManager.drawFood(gameEngine.gameContext);
+        document.addEventListener("click",bugManager.killBug); //kill bugs on click
     },
 
     pauseGame: function () {
@@ -103,6 +105,11 @@ var gamePage = {
     div_endGameButton: document.getElementById('div-endGameButton'),
     btn_endGameBackToMenu: document.getElementById('btn-endGameBackToMenu'),
     btn_endGameButtonRetry: document.getElementById('btn-endGameButtonRetry'),
+    pausebutton: document.getElementById("div-pausebutton"),
+    continuebutton: document.getElementById("btn-continue"),
+    quitbutton: document.getElementById("btn-quit"),
+    h1_endGame: document.getElementById('h1-pauseGame'),
+    div_pauseGame: document.getElementById('div-pauseGame'),
 
     game_canvas: document.getElementById('game-canvas'),
 
@@ -143,10 +150,21 @@ var gamePage = {
     },
 
     gameOver: function () {
-        myLib.show(gamePage.h1_endGame);
-        myLib.show(gamePage.div_levelStarting);
-        myLib.show(gamePage.div_endGameButton);
-        myLib.hide(gamePage.game_canvas);
+        if (gamePage.selectedLevel == 1){
+            myLib.show(gamePage.h1_endGame);
+            myLib.show(gamePage.div_levelStarting);
+            myLib.show(gamePage.div_endGameButton);
+            myLib.hide(gamePage.game_canvas);
+            myLib.hide(gamePage.div_pauseGame);
+        }
+        else{
+            myLib.show(gamePage.h1_endGame);
+            myLib.show(gamePage.div_levelStarting);
+            myLib.show(gamePage.div_endGameButton);
+            myLib.hide(gamePage.btn_endGameButtonRetry);
+            myLib.hide(gamePage.game_canvas);
+            myLib.hide(gamePage.div_pauseGame);
+        }
     },
 
     _onGoBackToHomePageClicked: function () {
