@@ -7,24 +7,24 @@ var bugManager = {
             color: 'black',
             score: 5,
             speed: {
-                1: 1,
-                2: 2,
+                1: 200,
+                2: 150,
             }
         },
         {
             color: 'red',
             score: 3,
             speed: {
-                1: 1,
-                2: 2,
+                1: 75,
+                2: 100,
             }
         },
         {
             color: 'orange',
             score: 1,
             speed: {
-                1: 1,
-                2: 2,
+                1: 60,
+                2: 80,
             }
         },
     ],
