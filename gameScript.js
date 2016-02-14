@@ -2,7 +2,7 @@ var gameEngine = {
     GAME_WIDTH: 400,
     GAME_HEIGHT: 600,
     GAME_TIME: 60,
-    GAME_FPS: 600,
+    GAME_FPS: 60,
     GAME_BACKGROUND: '255, 245, 157',
 
     selectedLevel: 1,
@@ -12,7 +12,13 @@ var gameEngine = {
     timeLeft: 0,
     gamePaused: false,
 
+    score_content : document.getElementById('score-content'),
     gameContext: document.getElementById('game-canvas').getContext('2d'),
+    
+    addScore: function(score){
+        gameEngine.gameScore += score;
+        gameEngine.score_content.innerHTML = '' + gameEngine.gameScore;
+    },
 
     _gameLost: function () {
         gameEngine.pauseGame();
@@ -26,14 +32,14 @@ var gameEngine = {
         if (gameEngine.selectedLevel == 1) {
             gamePage.startGame(gamePage.selectedLevel + 1);
         } else {
-            // TODO: done game 
+            gamePage.gameWon(); 
         }
     },
 
     _gameTimer: function () {
         gameEngine.timeLeft--;
         gamePage.setClock(gameEngine.timeLeft);
-        if (gameEngine.timeLeft == 0) {
+        if (gameEngine.timeLeft <= 0) {
             gameEngine._gameWon();
         }
     },
@@ -61,15 +67,14 @@ var gameEngine = {
 
         bugManager.drawBug(gameEngine.gameContext);
         foodManager.drawFood(gameEngine.gameContext);
-        bugManager.slowDownBug();
-        document.addEventListener("click",bugManager.killBug); //kill bugs on click
+        bugManager.slowDownBug();        
     },
 
     pauseGame: function () {
         clearInterval(gameEngine.gameLoopPID);
         clearInterval(gameEngine.gameTimerPID);
         bugManager.pauseBugCreation();
-        gamePaused = true;
+        gameEngine.gamePaused = true;
     },
 
 
@@ -81,6 +86,8 @@ var gameEngine = {
 
     startGame: function (selectedLevel) {
         foodManager.generateFood();
+        gameEngine.gameScore = 0;
+        gameEngine.addScore(0);
         bugManager.initBugManager(selectedLevel);
         gameEngine.selectedLevel = selectedLevel;
         gameEngine.timeLeft = gameEngine.GAME_TIME;
@@ -89,7 +96,7 @@ var gameEngine = {
 }
 
 var gamePage = {
-    STARTING_COUNT_DOWN: 0,
+    STARTING_COUNT_DOWN: 3,
 
     selectedLevel: 1,
     startingCountDown: 0,
@@ -182,9 +189,12 @@ var gamePage = {
         myLib.hide(gamePage.div_pauseGame);
         myLib.show(gamePage.div_endGameButton);
         myLib.show(gamePage.div_levelStarting);
-        if (gamePage.selectedLevel == 1){
-            myLib.show(gamePage.btn_endGameButtonRetry);
-        }
+        myLib.show(gamePage.btn_endGameButtonRetry);
+    },
+    
+    gameWon: function(){
+        gamePage.gameOver();
+        myLib.hide(gamePage.btn_endGameButtonRetry);
     },
 
     _onGoBackToHomePageClicked: function () {
@@ -221,6 +231,9 @@ var gamePage = {
         gamePage.btn_pauseGameExit.addEventListener(
             'click',
             gamePage._onGoBackToHomePageClicked);
+        gamePage.game_canvas.addEventListener(
+            'click',
+            bugManager.killBug); //kill bugs on click
     },
 
     startGame: function (selectedLevel) {

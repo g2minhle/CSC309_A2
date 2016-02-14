@@ -1,6 +1,7 @@
 var bugManager = {
     BUG_WIDTH: 30,
     BUG_HEIGHT: 30,
+    KILL_DISTANCE: 30, 
 
     BUG_TYPE: [
         {
@@ -18,7 +19,7 @@ var bugManager = {
                 1: 75,
                 2: 100,
             }
-        },
+        }, 
         {
             color: 'orange',
             score: 1,
@@ -83,52 +84,44 @@ var bugManager = {
         for (i = bugManager.bugs.length - 1; i > -1; i--) {
             var bug = bugManager.bugs[i];
             if (!bug.alive) {
-                bug.opacity -= 2;
-                if (bug.opacity == 0) {
+                bug.opacity -= (1 / (gameEngine.GAME_FPS * 2));
+                console.log(bug.opacity);
+                if (bug.opacity <= 0) {
                     myLib.removeAt(bugManager.bugs, i);
                     continue;
                 }
             }
             var xCoord = 15;
             var yCoord = 15;
-            
+
             gameContext.globalAlpha = bug.opacity;
             // draw the body 
-            gameContext.rect(bug.x,bug.y,bug.width,bug.height);
+            gameContext.rect(bug.x, bug.y, bug.width, bug.height);
             gameContext.stroke();
             gameContext.beginPath();
-            gameContext.arc(bug.x+bug.width/2,bug.y+bug.height/2,bug.width/2,0,2*Math.PI);
+            gameContext.arc(bug.x + bug.width / 2, bug.y + bug.height / 2, bug.width / 2, 0, 2 * Math.PI);
             //add legs to bug
-            gameContext.moveTo(bug.x,bug.y+bug.height/2);
-            gameContext.lineTo(bug.x-xCoord,bug.y+bug.height/2);
-            gameContext.moveTo(bug.x+bug.width,bug.y+bug.height/2);
-            gameContext.lineTo(bug.x+bug.width+xCoord,bug.y+bug.height/2);
-            
-            gameContext.moveTo(bug.x,bug.y+bug.height/2+10);
-            gameContext.lineTo(bug.x-xCoord,bug.y+(bug.height/2)+yCoord);
-            gameContext.moveTo(bug.x+bug.width,bug.y+(bug.height/2)+10);
-            gameContext.lineTo(bug.x+bug.width+xCoord,bug.y+(bug.height/2)+yCoord);
-            
-            gameContext.moveTo(bug.x,bug.y+(bug.height/2)-10);
-            gameContext.lineTo(bug.x-xCoord,bug.y+(bug.height/2)-yCoord);
-            gameContext.moveTo(bug.x+bug.width,bug.y+(bug.height/2)-10);
-            gameContext.lineTo(bug.x+bug.width+xCoord,bug.y+(bug.height/2)-yCoord);
+            gameContext.moveTo(bug.x, bug.y + bug.height / 2);
+            gameContext.lineTo(bug.x - xCoord, bug.y + bug.height / 2);
+            gameContext.moveTo(bug.x + bug.width, bug.y + bug.height / 2);
+            gameContext.lineTo(bug.x + bug.width + xCoord, bug.y + bug.height / 2);
+
+            gameContext.moveTo(bug.x, bug.y + bug.height / 2 + 10);
+            gameContext.lineTo(bug.x - xCoord, bug.y + (bug.height / 2) + yCoord);
+            gameContext.moveTo(bug.x + bug.width, bug.y + (bug.height / 2) + 10);
+            gameContext.lineTo(bug.x + bug.width + xCoord, bug.y + (bug.height / 2) + yCoord);
+
+            gameContext.moveTo(bug.x, bug.y + (bug.height / 2) - 10);
+            gameContext.lineTo(bug.x - xCoord, bug.y + (bug.height / 2) - yCoord);
+            gameContext.moveTo(bug.x + bug.width, bug.y + (bug.height / 2) - 10);
+            gameContext.lineTo(bug.x + bug.width + xCoord, bug.y + (bug.height / 2) - yCoord);
             gameContext.stroke();
+            
+            gameContext.fillStyle =  bugManager.BUG_TYPE[bug.bugType].color;
+            gameContext.fill();
+            
             gameContext.globalAlpha = 1.0;
-            // fill in color according to type of bug
-            if (bug.bugType == 0){
-                gameContext.fillStyle = 'black';
-                gameContext.fill();
-        
-            }
-            else if (bug.bugType == 1){
-                gameContext.fillStyle = 'red';
-                gameContext.fill();
-            }
-            else if (bug.bugType == 2){
-                gameContext.fillStyle = 'orange';
-                gameContext.fill();
-            }
+            
         }
     },
 
@@ -164,17 +157,15 @@ var bugManager = {
                     y: centerFood.y - centerBug.y
                 },
                 moveVectorLen = Math.sqrt(
-                                      Math.pow(moveVector.x, 2) 
-                                    + Math.pow(moveVector.y, 2), 
-                                      2),
+                    Math.pow(moveVector.x, 2)
+                    + Math.pow(moveVector.y, 2),
+                    2),
                 unitMoveVectorLen = {
                     x: moveVector.x / moveVectorLen,
                     y: moveVector.y / moveVectorLen
                 },
                 bugSpeed = bugManager.BUG_TYPE[bug.bugType].speed[bugManager.selectedLevel] / gameEngine.GAME_FPS,
                 finalMoveVectorLen = {
-                    //x:1,
-                    //y:1,
                     x: unitMoveVectorLen.x * bugSpeed,
                     y: unitMoveVectorLen.y * bugSpeed
                 };
@@ -183,33 +174,41 @@ var bugManager = {
         }
     },
     //function to kill bug
-  killBug: function (e){
-            // if game paused dont do anything
-        if (gameEngine.gamePaused == true){
-                return;
+    killBug: function (e) {
+        // if game paused dont do anything
+        if (gameEngine.gamePaused == true) {
+            return;
         }
-           //if game is not pause
-        else{ 
-            var n = 0;
+        //if game is not pause
+        else {
+            var n = 0,
+                mouseClick = {
+                    x: e.offsetX,
+                    y: e.offsetY,
+                    width: 0,
+                    height: 0
+                },
+                killDistance = bugManager.BUG_WIDTH / 2 + bugManager.KILL_DISTANCE;
+                                
             for (n = 0; n < bugManager.bugs.length; n++) {
-                var currBug= bugManager.bugs[n];
-                    dist = myPhysicLib.distanceBetween({ x:e.screenX + gameEngine.gameContext.canvas.offsetLeft, y:e.screenY + gameEngine.gameContext.canvas.offsetTop}, currBug);
-                    if(dist<=30){
-                        gameScore = gameScore + currBug.score;
-                        currBug.alive = false;
-                   }
+                var currBug = bugManager.bugs[n],
+                    dist = myPhysicLib.distanceBetween(mouseClick, currBug);
+                if (dist <= killDistance) {
+                    gameEngine.addScore(bugManager.BUG_TYPE[currBug.bugType].score);
+                    currBug.alive = false;
+                }
             }
-            
+
         }
-  },
-//function for the slower bug to slow down for faster bug 
-  slowDownBug: function () {
-       // check distance between bug and surronding bugs
-       // if faster bug's x coordinate > slower bug's x coordinate,
-       // move to the left 
-       // or else move to the right
-       // also need to check which direction the nearest food is to decide if move left
-       //or right
+    },
+    //function for the slower bug to slow down for faster bug 
+    slowDownBug: function () {
+        // check distance between bug and surronding bugs
+        // if faster bug's x coordinate > slower bug's x coordinate,
+        // move to the left 
+        // or else move to the right
+        // also need to check which direction the nearest food is to decide if move left
+        //or right
         var i = 0;
         var j = 0;
         var width_sqred = bugManager.BUG_WIDTH * bugManager.BUG_WIDTH;
@@ -218,39 +217,41 @@ var bugManager = {
         var distance_sqrt = Math.sqrt(distance_sqred);
         for (i = 0; i < bugManager.bugs.length; i++) {
             var currentBug = bugManager.bugs[i];
+            if (!currentBug.alive) continue;
             for (j = 0; j < bugManager.bugs.length; j++) {
                 var otherBug = bugManager.bugs[j];
+                if (!otherBug.alive) continue;
                 // checking that it is not the same bug
-                if(i != j){
-                    if( myPhysicLib.distanceBetween(currentBug,otherBug) < distance_sqrt){
-                        bugManager.lessPriorityBug(currentBug,otherBug).x = bugManager.lessPriorityBug(currentBug,otherBug).x -10;
+                if (i != j) {
+                    if (myPhysicLib.distanceBetween(currentBug, otherBug) < distance_sqrt) {
+                        bugManager.lessPriorityBug(currentBug, otherBug).x = bugManager.lessPriorityBug(currentBug, otherBug).x - 10;
                     }
-                    else{
+                    else {
                         return;
                     }
-                 }
+                }
             }
-        } 
-   },
-
- lessPriorityBug: function(firstBug,otherBug){
-    //different speed
-    if(firstBug.score < otherBug.score){
-        return firstBug;
-    }
-    else if(firstBug.score > otherBug.score){
-        return otherBug;
-    }
-    //same speed 
-    else if(firstBug.score == otherBug.score){
-        //if firstbug is on the right
-        if(firstBug.x > otherBug.x){
-            return otherBug;
         }
-        //if otherbug is on the right
-        if(otherBug.x > firstBug.x){
+    },
+
+    lessPriorityBug: function (firstBug, otherBug) {
+        //different speed
+        if (firstBug.score < otherBug.score) {
             return firstBug;
         }
-    }
- },
+        else if (firstBug.score > otherBug.score) {
+            return otherBug;
+        }
+        //same speed 
+        else if (firstBug.score == otherBug.score) {
+            //if firstbug is on the right
+            if (firstBug.x > otherBug.x) {
+                return otherBug;
+            }
+            //if otherbug is on the right
+            if (otherBug.x > firstBug.x) {
+                return firstBug;
+            }
+        }
+    },
 }
