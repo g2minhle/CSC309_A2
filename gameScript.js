@@ -10,7 +10,7 @@ var gameEngine = {
     gameLoopPID: 0,
     gameTimerPID: 0,
     timeLeft: 0,
-    GAME_PAUSED: false,
+    gamePaused: false,
 
     gameContext: document.getElementById('game-canvas').getContext('2d'),
 
@@ -69,7 +69,7 @@ var gameEngine = {
         clearInterval(gameEngine.gameLoopPID);
         clearInterval(gameEngine.gameTimerPID);
         bugManager.pauseBugCreation();
-        GAME_PAUSED = true;
+        gamePaused = true;
     },
 
 
@@ -93,6 +93,7 @@ var gamePage = {
 
     selectedLevel: 1,
     startingCountDown: 0,
+    countDownPID: 0,
 
     span_timerContent: document.getElementById('span-timerContent'),
     btn_gameCommand: document.getElementById('btn-gameCommand'),
@@ -107,25 +108,59 @@ var gamePage = {
     div_endGameButton: document.getElementById('div-endGameButton'),
     btn_endGameBackToMenu: document.getElementById('btn-endGameBackToMenu'),
     btn_endGameButtonRetry: document.getElementById('btn-endGameButtonRetry'),
-    pausebutton: document.getElementById("div-pausebutton"),
-    continuebutton: document.getElementById("btn-continue"),
-    quitbutton: document.getElementById("btn-quit"),
-    h1_endGame: document.getElementById('h1-pauseGame'),
+    
+    h1_pauseGame: document.getElementById('h1-pauseGame'),
     div_pauseGame: document.getElementById('div-pauseGame'),
+    btn_pauseGameContinue: document.getElementById('btn-pauseGameContinue'),
+    btn_pauseGameExit: document.getElementById('btn-pauseGameExit'),
 
     game_canvas: document.getElementById('game-canvas'),
 
     _onGameCommandClicked: function () {
-        // TODO:
-        // pause gameEngine
-        // display quit or resume 
+        if (gameEngine.gamePaused){
+            gameEngine.resumeGame();          
+            gameEngine.gamePaused = false;
+            gamePage.btn_gameCommand.innerHTML = "&#10074;&#10074;";
+            
+            if (gamePage.countDownPID != -1) {
+                gamePage.countDownPID = setInterval(gamePage._countDown, 1000);
+                myLib.show(gamePage.div_countDown);    
+            } else {
+                myLib.show(gamePage.game_canvas);
+                myLib.hide(gamePage.div_levelStarting);
+            }
+            myLib.hide(gamePage.div_pauseGame);
+        } else {
+            gameEngine.pauseGame();
+            gameEngine.gamePaused = true;
+            gamePage.btn_gameCommand.innerHTML = "&#9654;";
+            
+            myLib.show(gamePage.div_pauseGame);
+            myLib.hide(gamePage.game_canvas);
+            myLib.show(gamePage.div_levelStarting);            
+            
+            if (gamePage.countDownPID != -1) {    
+                clearInterval(gamePage.countDownPID);
+                myLib.hide(gamePage.div_countDown);
+            }
+        }
     },
     
-    // TODO: add resume clicked
-    // TODO: add quit to home page 
-
     _startGameLoop: function () {
         gameEngine.startGame(gamePage.selectedLevel);
+    },
+
+    _countDown: function () {
+        gamePage.startingCountDown--;
+        gamePage.h1_countDown.innerHTML = '' + gamePage.startingCountDown;
+        if (gamePage.startingCountDown == -1) {
+            clearInterval(gamePage.countDownPID);
+            gamePage.countDownPID = -1;
+            myLib.hide(gamePage.div_countDown);
+            myLib.hide(gamePage.div_levelStarting);
+            gamePage._startGameLoop(gamePage.selectedLevel);
+            myLib.show(gamePage.game_canvas);
+        }
     },
 
     _startCountDown: function (selectedLevel) {
@@ -134,17 +169,7 @@ var gamePage = {
         gamePage.h1_levelStating.innerHTML = 'LEVEL ' + selectedLevel;
         gamePage.startingCountDown = gamePage.STARTING_COUNT_DOWN;
         gamePage.h1_countDown.innerHTML = '' + gamePage.startingCountDown;
-        var countDownPID = setInterval(function () {
-            gamePage.startingCountDown--;
-            gamePage.h1_countDown.innerHTML = '' + gamePage.startingCountDown;
-            if (gamePage.startingCountDown == -1) {
-                clearInterval(countDownPID);
-                myLib.hide(gamePage.div_countDown);
-                myLib.hide(gamePage.div_levelStarting);
-                gamePage._startGameLoop(selectedLevel);
-                myLib.show(gamePage.game_canvas);
-            }
-        }, 1000);
+        gamePage.countDownPID = setInterval(gamePage._countDown, 1000);
     },
 
     setClock: function (time) {
@@ -152,20 +177,13 @@ var gamePage = {
     },
 
     gameOver: function () {
+        myLib.show(gamePage.h1_endGame);
+        myLib.hide(gamePage.game_canvas);
+        myLib.hide(gamePage.div_pauseGame);
+        myLib.show(gamePage.div_endGameButton);
+        myLib.show(gamePage.div_levelStarting);
         if (gamePage.selectedLevel == 1){
-            myLib.show(gamePage.h1_endGame);
-            myLib.show(gamePage.div_levelStarting);
-            myLib.show(gamePage.div_endGameButton);
-            myLib.hide(gamePage.game_canvas);
-            myLib.hide(gamePage.div_pauseGame);
-        }
-        else{
-            myLib.show(gamePage.h1_endGame);
-            myLib.show(gamePage.div_levelStarting);
-            myLib.show(gamePage.div_endGameButton);
-            myLib.hide(gamePage.btn_endGameButtonRetry);
-            myLib.hide(gamePage.game_canvas);
-            myLib.hide(gamePage.div_pauseGame);
+            myLib.show(gamePage.btn_endGameButtonRetry);
         }
     },
 
@@ -179,10 +197,13 @@ var gamePage = {
     },
 
     _init: function () {
-        myLib.hide(gamePage.h1_endGame);
-        myLib.hide(gamePage.div_endGameButton);
-        myLib.hide(gamePage.game_canvas);
+        gameEngine.gamePaused = false;        
         myLib.hide(tapTapBug.div_gamePage);
+        myLib.hide(gamePage.div_pauseGame);
+        myLib.hide(gamePage.div_endGameButton);
+        myLib.hide(gamePage.h1_endGame);
+        myLib.hide(gamePage.game_canvas);
+        gamePage.btn_gameCommand.innerHTML = "&#10074;&#10074;";
         gamePage.btn_endGameBackToMenu.addEventListener(
             'click',
             gamePage._onGoBackToHomePageClicked);
@@ -192,7 +213,14 @@ var gamePage = {
         gamePage.btn_endGameButtonRetry.addEventListener(
             'click',
             gamePage._onRetryClicked);
-
+            
+        gamePage.btn_pauseGameContinue.addEventListener(
+            'click',
+            gamePage._onGameCommandClicked);
+            
+        gamePage.btn_pauseGameExit.addEventListener(
+            'click',
+            gamePage._onGoBackToHomePageClicked);
     },
 
     startGame: function (selectedLevel) {
@@ -200,7 +228,6 @@ var gamePage = {
         myLib.show(tapTapBug.div_gamePage);
         gamePage.selectedLevel = selectedLevel;
         gamePage._startCountDown(selectedLevel);
-
     }
 }
 
