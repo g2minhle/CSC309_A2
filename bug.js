@@ -1,6 +1,6 @@
 var bugManager = {
-    BUG_WIDTH: 10,
-    BUG_HEIGHT: 40,
+    BUG_WIDTH: 30,
+    BUG_HEIGHT: 30,
 
     BUG_TYPE: [
         {
@@ -89,12 +89,46 @@ var bugManager = {
                     continue;
                 }
             }
-
+            var xCoord = 15;
+            var yCoord = 15;
+            
             gameContext.globalAlpha = bug.opacity;
-            // TODO Draw the bug
-            gameContext.rect(bug.x, bug.y, bug.width, bug.height);
+            // draw the body 
+            gameContext.rect(bug.x,bug.y,bug.width,bug.height);
+            gameContext.stroke();
+            gameContext.beginPath();
+            gameContext.arc(bug.x+bug.width/2,bug.y+bug.height/2,bug.width/2,0,2*Math.PI);
+            //add legs to bug
+            gameContext.moveTo(bug.x,bug.y+bug.height/2);
+            gameContext.lineTo(bug.x-xCoord,bug.y+bug.height/2);
+            gameContext.moveTo(bug.x+bug.width,bug.y+bug.height/2);
+            gameContext.lineTo(bug.x+bug.width+xCoord,bug.y+bug.height/2);
+            
+            gameContext.moveTo(bug.x,bug.y+bug.height/2+10);
+            gameContext.lineTo(bug.x-xCoord,bug.y+(bug.height/2)+yCoord);
+            gameContext.moveTo(bug.x+bug.width,bug.y+(bug.height/2)+10);
+            gameContext.lineTo(bug.x+bug.width+xCoord,bug.y+(bug.height/2)+yCoord);
+            
+            gameContext.moveTo(bug.x,bug.y+(bug.height/2)-10);
+            gameContext.lineTo(bug.x-xCoord,bug.y+(bug.height/2)-yCoord);
+            gameContext.moveTo(bug.x+bug.width,bug.y+(bug.height/2)-10);
+            gameContext.lineTo(bug.x+bug.width+xCoord,bug.y+(bug.height/2)-yCoord);
             gameContext.stroke();
             gameContext.globalAlpha = 1.0;
+            // fill in color according to type of bug
+            if (bug.bugType == 0){
+                gameContext.fillStyle = 'black';
+                gameContext.fill();
+        
+            }
+            else if (bug.bugType == 1){
+                gameContext.fillStyle = 'red';
+                gameContext.fill();
+            }
+            else if (bug.bugType == 2){
+                gameContext.fillStyle = 'orange';
+                gameContext.fill();
+            }
         }
     },
 
@@ -135,5 +169,57 @@ var bugManager = {
                 bug.y -= 1;
             }
         }
-    }
+    },
+    //function to kill bug
+/*
+    killBug: function (e){
+
+               if (GAME_PAUSED === true){
+                return;
+            }
+            else{ 
+                //var n = 0;
+                //for (n = 0; i < bugs.length; n++) {
+                    //var currBug= bugManager.bugs[0];
+                    //dist = myPhysicLib.distanceBetween({ x: e.clientX, y: e.clientY}, currBug);
+                    //if(dist<=200){
+                        //alert("hello");
+                        //gameScore = gameScore + currBug.score;
+                        //currBug.alive = false;
+                    //}
+                //}
+            //}
+    },
+    //function to make sure that slower bug stops for faster bug
+   slowDownBug: function (bugManager.bugs) {
+       // check distance between bug and surronding bugs
+       // if faster bug's x coordinate > slower bug's x coordinate,
+       // move to the left 
+       // or else move to the right
+       // also need to check which direction the nearest food is to decide if move left
+       //or right
+        var i = 0;
+        var j = 0;
+        for (i = 0; i < bugManager.bugs.length; i++) {
+            var currentBug = bugManager.bugs[i];
+            for (j = 0; j < bugManager.bugs.length; j++) {
+                var otherBug = bugManager.bugs[j];
+                // checking that it is not the same bug
+                if(i != j){
+                    if (currentBug.bugType.score < otherBug.bugType.score){
+                        if (currentBug.x <= otherBug.x){
+                            currentBug.x = currentBug.x - 5;
+                            currentBug.y = currentBug.y + 5;
+                        }
+                        else if (currentBug.x >= otherBug.x){
+                            currentBug.x = currentBug.x + 5;
+                            currentBug.y = currentBug.y - 5;
+                        }
+
+                    }
+                }
+            }
+        }
+   }
+   */
 }
