@@ -96,8 +96,8 @@ var bugManager = {
 
             gameContext.globalAlpha = bug.opacity;
             // draw the body 
-            gameContext.rect(bug.x, bug.y, bug.width, bug.height);
-            gameContext.stroke();
+            //gameContext.rect(bug.x, bug.y, bug.width, bug.height);
+            //gameContext.stroke();
             gameContext.beginPath();
             gameContext.arc(bug.x + bug.width / 2, bug.y + bug.height / 2, bug.width / 2, 0, 2 * Math.PI);
             //add legs to bug
