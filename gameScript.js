@@ -61,6 +61,7 @@ var gameEngine = {
 
         bugManager.drawBug(gameEngine.gameContext);
         foodManager.drawFood(gameEngine.gameContext);
+        bugManager.slowDownBug();
         document.addEventListener("click",bugManager.killBug); //kill bugs on click
     },
 
