@@ -189,9 +189,9 @@ var bugManager = {
                     //}
                 //}
             //}
-    },
-    //function to make sure that slower bug stops for faster bug
-   slowDownBug: function (bugManager.bugs) {
+    }, */
+//function for the slower bug to slow down for faster bug 
+  slowDownBug: function () {
        // check distance between bug and surronding bugs
        // if faster bug's x coordinate > slower bug's x coordinate,
        // move to the left 
@@ -200,26 +200,45 @@ var bugManager = {
        //or right
         var i = 0;
         var j = 0;
+        var width_sqred = bugManager.BUG_WIDTH * bugManager.BUG_WIDTH;
+        var height_sqred = bugManager.BUG_HEIGHT * bugManager.BUG_HEIGHT;
+        var distance_sqred = width_sqred + height_sqred;
+        var distance_sqrt = Math.sqrt(distance_sqred);
         for (i = 0; i < bugManager.bugs.length; i++) {
             var currentBug = bugManager.bugs[i];
             for (j = 0; j < bugManager.bugs.length; j++) {
                 var otherBug = bugManager.bugs[j];
                 // checking that it is not the same bug
                 if(i != j){
-                    if (currentBug.bugType.score < otherBug.bugType.score){
-                        if (currentBug.x <= otherBug.x){
-                            currentBug.x = currentBug.x - 5;
-                            currentBug.y = currentBug.y + 5;
-                        }
-                        else if (currentBug.x >= otherBug.x){
-                            currentBug.x = currentBug.x + 5;
-                            currentBug.y = currentBug.y - 5;
-                        }
-
+                    if( myPhysicLib.distanceBetween(currentBug,otherBug) < distance_sqrt){
+                        bugManager.lessPriorityBug(currentBug,otherBug).x = bugManager.lessPriorityBug(currentBug,otherBug).x -25;
                     }
-                }
+                    else{
+                        return;
+                    }
+                 }
             }
+        } 
+   },
+
+ lessPriorityBug: function(firstBug,otherBug){
+    //different speed
+    if(firstBug.score < otherBug.score){
+        return firstBug;
+    }
+    else if(firstBug.score > otherBug.score){
+        return otherBug;
+    }
+    //same speed 
+    else if(firstBug.score == otherBug.score){
+        //if firstbug is on the right
+        if(firstBug.x > otherBug.x){
+            return otherBug;
         }
-   }
-   */
+        //if otherbug is on the right
+        if(otherBug.x > firstBug.x){
+            return firstBug;
+        }
+    }
+ },
 }
