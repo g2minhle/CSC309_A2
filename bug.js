@@ -183,25 +183,25 @@ var bugManager = {
         }
     },
     //function to kill bug
-/*
-    killBug: function (e){
-
-               if (GAME_PAUSED === true){
+  killBug: function (e){
+            // if game paused dont do anything
+        if (gameEngine.gamePaused == true){
                 return;
+        }
+           //if game is not pause
+        else{ 
+            var n = 0;
+            for (n = 0; n < bugManager.bugs.length; n++) {
+                var currBug= bugManager.bugs[n];
+                    dist = myPhysicLib.distanceBetween({ x:e.screenX + gameEngine.gameContext.canvas.offsetLeft, y:e.screenY + gameEngine.gameContext.canvas.offsetTop}, currBug);
+                    if(dist<=30){
+                        gameScore = gameScore + currBug.score;
+                        currBug.alive = false;
+                   }
             }
-            else{ 
-                //var n = 0;
-                //for (n = 0; i < bugs.length; n++) {
-                    //var currBug= bugManager.bugs[0];
-                    //dist = myPhysicLib.distanceBetween({ x: e.clientX, y: e.clientY}, currBug);
-                    //if(dist<=200){
-                        //alert("hello");
-                        //gameScore = gameScore + currBug.score;
-                        //currBug.alive = false;
-                    //}
-                //}
-            //}
-    }, */
+            
+        }
+  },
 //function for the slower bug to slow down for faster bug 
   slowDownBug: function () {
        // check distance between bug and surronding bugs
