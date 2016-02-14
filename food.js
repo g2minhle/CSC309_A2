@@ -60,8 +60,8 @@ var foodManager = {
                 }
             }
             gameCanvas.globalAlpha = foodManager.allFood[i].opacity;
-            gameCanvas.rect(food.x, food.y, foodManager.FOOD_WIDTH, foodManager.FOOD_HEIGHT);
-            gameCanvas.stroke();
+            //gameCanvas.rect(food.x, food.y, foodManager.FOOD_WIDTH, foodManager.FOOD_HEIGHT);
+            //gameCanvas.stroke();
 
             gameCanvas.drawImage(
                 foodManager.foodImage,
