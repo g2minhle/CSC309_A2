@@ -185,6 +185,7 @@ var bugManager = {
                         x: bug.moveAwayDirection,
                         y: 0
                     };
+                    bugSpeed = bugSpeed * 2;
                 } else {
                     bug.moveAway = false;
                 }
@@ -248,7 +249,7 @@ var bugManager = {
                 var lowerPriorityBug = bugManager.lessPriorityBug(currentBug, otherBug);
                 var higherPriorityBug = bugManager.highPriorityBug(currentBug, otherBug);
                 // if lower priority bug is on the left
-                if(lowerPriorityBug.moveAway) continue;
+                //if(lowerPriorityBug.moveAway) continue;
                 lowerPriorityBug.moveAway = true;
                 if (lowerPriorityBug.x < higherPriorityBug.x) {
                     //lowerPriorityBug.x = lowerPriorityBug.x - 10;
