@@ -48,6 +48,7 @@ var bugManager = {
     */
     _createBug: function () {
         console.log("Bug created");
+        bugManager.bugCreationPID = -1;
         var bugType = bugManager._randomBugType(),
             newBug = {
                 width: bugManager.BUG_WIDTH,
@@ -70,19 +71,22 @@ var bugManager = {
     */
     pauseBugCreation: function () {
         clearTimeout(bugManager.bugCreationPID);
+        bugManager.bugCreationPID = -1;
     },
     
     /* Resumes bug creation when game is restarted.
     */
     resumeBugCreation: function () {
-        bugManager.bugCreationPID = setTimeout(
-            bugManager._createBug,
-            myLib.getRandomNumber(1000, 3000));
+        if(bugManager.bugCreationPID == -1) {
+            bugManager.bugCreationPID = setTimeout(
+                bugManager._createBug,
+                myLib.getRandomNumber(1000, 3000));
+        }
     },
     /* Initliazes the bug manager class for the selected level.
     */
     initBugManager: function (selectedLevel) {
-        var i;
+        bugManager.bugCreationPID = -1;
         bugManager.bugs = [];
         bugManager.selectedLevel = selectedLevel;
         bugManager.resumeBugCreation();
