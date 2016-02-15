@@ -14,18 +14,22 @@ var gameEngine = {
 
     score_content: document.getElementById('score-content'),
     gameContext: document.getElementById('game-canvas').getContext('2d'),
-
+   
+    /* Adds and records the score
+    */
     addScore: function (score) {
         gameEngine.gameScore += score;
         gameEngine.score_content.innerHTML = '' + gameEngine.gameScore;
     },
-
+    /* Brings up the game over page, when game is lost.
+    */
     _gameLost: function () {
         gameEngine.pauseGame();
         gamePage.gameOver();
         homePage.saveHighScore(gameEngine.selectedLevel, gameEngine.gameScore);
     },
-
+    /* Brings up the game over page when game is won.
+    */ 
     _gameWon: function () {
         gameEngine.pauseGame();
         homePage.saveHighScore(gameEngine.selectedLevel, gameEngine.gameScore);
@@ -35,7 +39,8 @@ var gameEngine = {
             gamePage.gameWon();
         }
     },
-
+    /* Controls the timer for the game.
+    */
     _gameTimer: function () {
         gameEngine.timeLeft--;
         gamePage.setClock(gameEngine.timeLeft);
@@ -43,7 +48,8 @@ var gameEngine = {
             gameEngine._gameWon();
         }
     },
-
+    /* Controls the loop of the game.
+    */
     _gameLoop: function () {
         gameEngine.gameContext.canvas.width = gameEngine.GAME_WIDTH;
         gameEngine.gameContext.canvas.height = gameEngine.GAME_HEIGHT;
@@ -69,15 +75,18 @@ var gameEngine = {
         foodManager.drawFood(gameEngine.gameContext);
         bugManager.slowDownBug();
     },
-
+    /* Pauses game
+    */
     pauseGame: function () {
         clearInterval(gameEngine.gameLoopPID);
         clearInterval(gameEngine.gameTimerPID);
         bugManager.pauseBugCreation();
         gameEngine.gamePaused = true;
     },
-
-
+    
+    /* Resumes game
+    */
+    
     resumeGame: function () {
         gamePage.setClock(gameEngine.timeLeft);
         gameEngine.gameLoopPID = setInterval(gameEngine._gameLoop, 1000 / gameEngine.GAME_FPS);
@@ -85,7 +94,11 @@ var gameEngine = {
         bugManager.resumeBugCreation();
         gameEngine.gamePaused = false;
     },
-
+    
+    /* Starts the game. The scores are made to 0 and the canvas is erased so new bugs and food 
+    can be drawn again.
+    */
+    
     startGame: function (selectedLevel) {
         foodManager.generateFood();
         gameEngine.gameScore = 0;
@@ -96,7 +109,8 @@ var gameEngine = {
         gameEngine.resumeGame();
     }
 }
-
+/* Controls the game page.
+*/
 var gamePage = {
     STARTING_COUNT_DOWN: 3,
 
@@ -124,7 +138,9 @@ var gamePage = {
     btn_pauseGameExit: document.getElementById('btn-pauseGameExit'),
 
     game_canvas: document.getElementById('game-canvas'),
-
+    
+    /* Controls the pause and resume button functionality.
+    */
     _onGameCommandClicked: function () {
         if (gameEngine.gamePaused) {
             gameEngine.gamePaused = false;
@@ -155,11 +171,13 @@ var gamePage = {
             }
         }
     },
-
+    /* Starts the game at the selected level.
+    */
     _startGameLoop: function () {
         gameEngine.startGame(gamePage.selectedLevel);
     },
-
+     /* Counts down the timer.
+    */
     _countDown: function () {
         gamePage.startingCountDown--;
         gamePage.h1_countDown.innerHTML = '' + gamePage.startingCountDown;
@@ -172,7 +190,8 @@ var gamePage = {
             myLib.show(gamePage.game_canvas);
         }
     },
-
+    /* Controls the start of the count down.
+    */
     _startCountDown: function (selectedLevel) {
         myLib.show(gamePage.div_countDown);
         myLib.show(gamePage.div_levelStarting);
@@ -181,11 +200,13 @@ var gamePage = {
         gamePage.h1_countDown.innerHTML = '' + gamePage.startingCountDown;
         gamePage.countDownPID = setInterval(gamePage._countDown, 1000);
     },
-
+    /* Sets and resets the timer.
+    */
     setClock: function (time) {
         gamePage.span_timerContent.innerHTML = time;
     },
-
+    /* Shows the game over page.
+    */
     gameOver: function () {
         myLib.show(gamePage.h1_endGame);
         myLib.hide(gamePage.game_canvas);
@@ -194,21 +215,25 @@ var gamePage = {
         myLib.show(gamePage.div_levelStarting);
         myLib.show(gamePage.btn_endGameButtonRetry);
     },
-
+    /* Shows the game won page.
+    */
     gameWon: function () {
         gamePage.gameOver();
         //myLib.hide(gamePage.btn_endGameButtonRetry);
     },
-
+    /* Causes the menu to return to the home page.
+    */
     _onGoBackToHomePageClicked: function () {
         myLib.hide(tapTapBug.div_gamePage);
         homePage.init();
     },
-
+    /* Restarts game when retry is clicked.
+    */
     _onRetryClicked: function () {
         gamePage.startGame(gamePage.selectedLevel);
     },
-
+    /* Initializes the loading of the game page.
+    */
     _init: function () {
         gameEngine.gamePaused = false;
         myLib.hide(tapTapBug.div_gamePage);
@@ -238,7 +263,8 @@ var gamePage = {
             'click',
             bugManager.killBug); //kill bugs on click
     },
-
+    /* Starts game
+    */
     startGame: function (selectedLevel) {
         gamePage._init();
         myLib.show(tapTapBug.div_gamePage);

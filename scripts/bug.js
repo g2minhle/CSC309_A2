@@ -289,6 +289,8 @@ var bugManager = {
             }
         }
     },
+    /* Returns the bug with the higher priority.
+     */
     highPriorityBug: function (firstBug, otherBug) {
         //different speed
         var firstBugScore = bugManager.BUG_TYPE[firstBug.bugType].score,

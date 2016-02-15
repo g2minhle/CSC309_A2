@@ -6,7 +6,9 @@ var foodManager = {
 
     allFood: [],
     foodImage: null,
-
+    
+    /* Creates food.
+     */
     _createFood: function () {
         return {
             id: foodManager.allFood.length,
@@ -23,7 +25,8 @@ var foodManager = {
                 gameEngine.GAME_HEIGHT - foodManager.FOOD_HEIGHT),
         };
     },
-
+    /* Checks if there is any overlap in food.
+     */
     _hasFoodOverlap: function (newFood) {
         for (var i = 0; i < foodManager.allFood.length; i++) {
             if (myPhysicLib.hasCollision(newFood, foodManager.allFood[i])) {
@@ -32,7 +35,8 @@ var foodManager = {
         }
         return false;
     },
-
+    /* Generates food and uses image.
+     */
     generateFood: function () {
         foodManager.foodImage = new Image();
         foodManager.foodImage.src = foodManager.FOOD_IMG_URL;
@@ -46,7 +50,8 @@ var foodManager = {
             foodManager.allFood.push(newFood);
         }
     },
-
+    /* Draws out food on the gameCanvas
+     */
     drawFood: function (gameCanvas) {
         //console.log("drawFood");
         for (var i = foodManager.allFood.length - 1; i > -1; i--) {
@@ -70,7 +75,8 @@ var foodManager = {
             gameCanvas.globalAlpha = 1;
         };
     },
-
+    /* Checks if food is eaten.
+     */
     updateFoodCondition: function (bugs) {
         var i, j = 0;
         for (i = 0; i < foodManager.allFood.length; i++) {
