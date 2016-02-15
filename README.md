@@ -1,1 +1,10 @@
 # CSC309_A2
+Names:
+
+Minh Le Hoang
+cdf:g2minhle
+email:minh.lehoang@mail.toronto.ca
+
+Nidhi Kantak 
+cdf: g5kantak
+email: nidhi.kantak@mail.utoronto.ca
