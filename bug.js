@@ -232,8 +232,15 @@ var bugManager = {
                 if (i != j) {
                     //get distance between bugs.
                     if (myPhysicLib.distanceBetween(currentBug, otherBug) < distance_sqrt) {
-                        //makes the bug with less priority move to the right.
-                        bugManager.lessPriorityBug(currentBug, otherBug).x = bugManager.lessPriorityBug(currentBug, otherBug).x - 10;
+                        var lowerPriorityBug = bugManager.lessPriorityBug(firstBug,otherBug);
+                        var higherPriorityBug = bugManager.higherPriorityBug(firstBug,otherBug);
+                        // if lower priority bug is on the left
+                        if(lowerPriorityBug.x < higherPriorityBug.x){
+                            bugManager.lessPriorityBug(currentBug, otherBug).x = bugManager.lessPriorityBug(currentBug, otherBug).x - 10;
+                        }
+                        else if(lowerPriorityBug.x > higherPriorityBug.x){
+                            bugManager.lessPriorityBug(currentBug, otherBug).x = bugManager.lessPriorityBug(currentBug, otherBug).x + 10;
+                        }
                     }
                     else {
                         return;
@@ -261,6 +268,26 @@ var bugManager = {
             //if otherbug is on the right
             if (otherBug.x > firstBug.x) {
                 return firstBug;
+            }
+        }
+    },
+    highPriorityBug: function (firstBug, otherBug) {
+        //different speed
+        if (firstBug.score > otherBug.score) {
+            return firstBug;
+        }
+        else if (otherBug.score > firstBug.score) {
+            return otherBug;
+        }
+        //same speed 
+        else if (firstBug.score == otherBug.score) {
+            //if firstbug is on the right
+            if (firstBug.x > otherBug.x) {
+                return firstBug;
+            }
+            //if otherbug is on the right
+            if (otherBug.x > firstBug.x) {
+                return otherBug;
             }
         }
     },
