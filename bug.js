@@ -1,7 +1,7 @@
 var bugManager = {
     BUG_WIDTH: 30,
     BUG_HEIGHT: 30,
-    KILL_DISTANCE: 30, 
+    KILL_DISTANCE: 30,
 
     BUG_TYPE: [
         {
@@ -19,7 +19,7 @@ var bugManager = {
                 1: 75,
                 2: 100,
             }
-        }, 
+        },
         {
             color: 'orange',
             score: 1,
@@ -58,12 +58,13 @@ var bugManager = {
                 format: 'rectangle',
                 bugType: bugType
             };
+        if (gameEngine.gamePaused) return;
         bugManager.bugs.push(newBug);
         bugManager.resumeBugCreation();
     },
 
     pauseBugCreation: function () {
-        clearInterval(bugManager.bugCreationPID);
+        clearTimeout(bugManager.bugCreationPID);
     },
 
     resumeBugCreation: function () {
@@ -85,7 +86,6 @@ var bugManager = {
             var bug = bugManager.bugs[i];
             if (!bug.alive) {
                 bug.opacity -= (1 / (gameEngine.GAME_FPS * 2));
-                console.log(bug.opacity);
                 if (bug.opacity <= 0) {
                     myLib.removeAt(bugManager.bugs, i);
                     continue;
@@ -116,12 +116,12 @@ var bugManager = {
             gameContext.moveTo(bug.x + bug.width, bug.y + (bug.height / 2) - 10);
             gameContext.lineTo(bug.x + bug.width + xCoord, bug.y + (bug.height / 2) - yCoord);
             gameContext.stroke();
-            
-            gameContext.fillStyle =  bugManager.BUG_TYPE[bug.bugType].color;
+
+            gameContext.fillStyle = bugManager.BUG_TYPE[bug.bugType].color;
             gameContext.fill();
-            
+
             gameContext.globalAlpha = 1.0;
-            
+
         }
     },
 
@@ -189,14 +189,13 @@ var bugManager = {
                     height: 0
                 },
                 killDistance = bugManager.BUG_WIDTH / 2 + bugManager.KILL_DISTANCE;
-                                
+
             for (n = 0; n < bugManager.bugs.length; n++) {
                 var currBug = bugManager.bugs[n],
                     dist = myPhysicLib.distanceBetween(mouseClick, currBug);
                 if (dist <= killDistance) {
                     gameEngine.addScore(bugManager.BUG_TYPE[currBug.bugType].score);
                     currBug.alive = false;
-                    var scoreDisplay = document.getElementById('score-content').innerHTML = gameEngine.gameScore;
                 }
             }
 

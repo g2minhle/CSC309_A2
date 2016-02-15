@@ -12,10 +12,10 @@ var gameEngine = {
     timeLeft: 0,
     gamePaused: false,
 
-    score_content : document.getElementById('score-content'),
+    score_content: document.getElementById('score-content'),
     gameContext: document.getElementById('game-canvas').getContext('2d'),
-    
-    addScore: function(score){
+
+    addScore: function (score) {
         gameEngine.gameScore += score;
         gameEngine.score_content.innerHTML = '' + gameEngine.gameScore;
     },
@@ -32,7 +32,7 @@ var gameEngine = {
         if (gameEngine.selectedLevel == 1) {
             gamePage.startGame(gamePage.selectedLevel + 1);
         } else {
-            gamePage.gameWon(); 
+            gamePage.gameWon();
         }
     },
 
@@ -67,7 +67,7 @@ var gameEngine = {
 
         bugManager.drawBug(gameEngine.gameContext);
         foodManager.drawFood(gameEngine.gameContext);
-        bugManager.slowDownBug();        
+        bugManager.slowDownBug();
     },
 
     pauseGame: function () {
@@ -82,6 +82,8 @@ var gameEngine = {
         gamePage.setClock(gameEngine.timeLeft);
         gameEngine.gameLoopPID = setInterval(gameEngine._gameLoop, 1000 / gameEngine.GAME_FPS);
         gameEngine.gameTimerPID = setInterval(gameEngine._gameTimer, 1000);
+        bugManager.resumeBugCreation();
+        gameEngine.gamePaused = false;
     },
 
     startGame: function (selectedLevel) {
@@ -115,7 +117,7 @@ var gamePage = {
     div_endGameButton: document.getElementById('div-endGameButton'),
     btn_endGameBackToMenu: document.getElementById('btn-endGameBackToMenu'),
     btn_endGameButtonRetry: document.getElementById('btn-endGameButtonRetry'),
-    
+
     h1_pauseGame: document.getElementById('h1-pauseGame'),
     div_pauseGame: document.getElementById('div-pauseGame'),
     btn_pauseGameContinue: document.getElementById('btn-pauseGameContinue'),
@@ -124,35 +126,36 @@ var gamePage = {
     game_canvas: document.getElementById('game-canvas'),
 
     _onGameCommandClicked: function () {
-        if (gameEngine.gamePaused){
-            gameEngine.resumeGame();          
+        if (gameEngine.gamePaused) {
             gameEngine.gamePaused = false;
             gamePage.btn_gameCommand.innerHTML = "&#10074;&#10074;";
-            
+
             if (gamePage.countDownPID != -1) {
                 gamePage.countDownPID = setInterval(gamePage._countDown, 1000);
-                myLib.show(gamePage.div_countDown);    
+                myLib.show(gamePage.div_countDown);
             } else {
+                gameEngine.resumeGame();
                 myLib.show(gamePage.game_canvas);
                 myLib.hide(gamePage.div_levelStarting);
             }
             myLib.hide(gamePage.div_pauseGame);
         } else {
-            gameEngine.pauseGame();
             gameEngine.gamePaused = true;
             gamePage.btn_gameCommand.innerHTML = "&#9654;";
-            
+
             myLib.show(gamePage.div_pauseGame);
+            myLib.show(gamePage.div_levelStarting);
             myLib.hide(gamePage.game_canvas);
-            myLib.show(gamePage.div_levelStarting);            
-            
-            if (gamePage.countDownPID != -1) {    
+
+            if (gamePage.countDownPID != -1) {
                 clearInterval(gamePage.countDownPID);
                 myLib.hide(gamePage.div_countDown);
+            } else {
+                gameEngine.pauseGame();
             }
         }
     },
-    
+
     _startGameLoop: function () {
         gameEngine.startGame(gamePage.selectedLevel);
     },
@@ -191,10 +194,10 @@ var gamePage = {
         myLib.show(gamePage.div_levelStarting);
         myLib.show(gamePage.btn_endGameButtonRetry);
     },
-    
-    gameWon: function(){
+
+    gameWon: function () {
         gamePage.gameOver();
-        myLib.hide(gamePage.btn_endGameButtonRetry);
+        //myLib.hide(gamePage.btn_endGameButtonRetry);
     },
 
     _onGoBackToHomePageClicked: function () {
@@ -207,7 +210,7 @@ var gamePage = {
     },
 
     _init: function () {
-        gameEngine.gamePaused = false;        
+        gameEngine.gamePaused = false;
         myLib.hide(tapTapBug.div_gamePage);
         myLib.hide(gamePage.div_pauseGame);
         myLib.hide(gamePage.div_endGameButton);
@@ -223,11 +226,11 @@ var gamePage = {
         gamePage.btn_endGameButtonRetry.addEventListener(
             'click',
             gamePage._onRetryClicked);
-            
+
         gamePage.btn_pauseGameContinue.addEventListener(
             'click',
             gamePage._onGameCommandClicked);
-            
+
         gamePage.btn_pauseGameExit.addEventListener(
             'click',
             gamePage._onGoBackToHomePageClicked);
