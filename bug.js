@@ -44,8 +44,8 @@ var bugManager = {
             return 2;
         }
     },
-/* Function to create bugs
-*/
+    /* Function to create bugs
+    */
     _createBug: function () {
         console.log("Bug created");
         var bugType = bugManager._randomBugType(),
@@ -57,35 +57,38 @@ var bugManager = {
                 opacity: 1,
                 alive: true,
                 format: 'rectangle',
-                bugType: bugType
+                bugType: bugType,
+                moveAway: false,
+                time: 0,
+                moveAwayDirection: 0
             };
         if (gameEngine.gamePaused) return;
         bugManager.bugs.push(newBug);
         bugManager.resumeBugCreation();
     },
-/* Pauses bug creation when game is over or paused.
-*/
+    /* Pauses bug creation when game is over or paused.
+    */
     pauseBugCreation: function () {
         clearTimeout(bugManager.bugCreationPID);
     },
     
-/* Resumes bug creation when game is restarted.
-*/
+    /* Resumes bug creation when game is restarted.
+    */
     resumeBugCreation: function () {
         bugManager.bugCreationPID = setTimeout(
             bugManager._createBug,
             myLib.getRandomNumber(1000, 3000));
     },
-/* Initliazes the bug manager class for the selected level.
-*/
+    /* Initliazes the bug manager class for the selected level.
+    */
     initBugManager: function (selectedLevel) {
         var i;
         bugManager.bugs = [];
         bugManager.selectedLevel = selectedLevel;
         bugManager.resumeBugCreation();
     },
-/* Draws out the bug from canvas.
-*/
+    /* Draws out the bug from canvas.
+    */
     drawBug: function (gameContext) {
         var i = 0;
         for (i = bugManager.bugs.length - 1; i > -1; i--) {
@@ -123,7 +126,7 @@ var bugManager = {
             gameContext.lineTo(bug.x + bug.width + xCoord, bug.y + (bug.height / 2) - yCoord);
             gameContext.stroke();
             // Add colour
-            gameContext.fillStyle =  bugManager.BUG_TYPE[bug.bugType].color;
+            gameContext.fillStyle = bugManager.BUG_TYPE[bug.bugType].color;
             gameContext.fill();
 
             gameContext.globalAlpha = 1.0;
@@ -151,7 +154,7 @@ var bugManager = {
     
     /* Updates the bugs' locations and moves them towards nearest food.
     */
-    
+
     updateBugLocation: function (allFood) {
         var i = 0;
         for (i = 0; i < bugManager.bugs.length; i++) {
@@ -169,15 +172,29 @@ var bugManager = {
                     Math.pow(moveVector.x, 2)
                     + Math.pow(moveVector.y, 2),
                     2),
-                unitMoveVectorLen = {
+                unitMoveVector = {
                     x: moveVector.x / moveVectorLen,
                     y: moveVector.y / moveVectorLen
                 },
-                bugSpeed = bugManager.BUG_TYPE[bug.bugType].speed[bugManager.selectedLevel] / gameEngine.GAME_FPS,
-                finalMoveVectorLen = {
-                    x: unitMoveVectorLen.x * bugSpeed,
-                    y: unitMoveVectorLen.y * bugSpeed
-                };
+                bugSpeed = bugManager.BUG_TYPE[bug.bugType].speed[bugManager.selectedLevel] / gameEngine.GAME_FPS;
+
+            if (bug.moveAway) {
+                if (bug.time > 0) {
+                    bug.time--;
+                    unitMoveVector = {
+                        x: bug.moveAwayDirection,
+                        y: 0
+                    };
+                } else {
+                    bug.moveAway = false;
+                }
+            }
+
+            var finalMoveVectorLen = {
+                x: unitMoveVector.x * bugSpeed,
+                y: unitMoveVector.y * bugSpeed
+            };
+
             bug.x += finalMoveVectorLen.x;
             bug.y += finalMoveVectorLen.y;
         }
@@ -212,62 +229,55 @@ var bugManager = {
 
         }
     },
-     /* Makes the slower bug let the faster bug move through. If bugs are of the same speed,
-     makes the bug on the right, move through.
-    */
+    /* Makes the slower bug let the faster bug move through. If bugs are of the same speed,
+    makes the bug on the right, move through.
+   */
     slowDownBug: function () {
         var i = 0;
         var j = 0;
-        var width_sqred = bugManager.BUG_WIDTH * bugManager.BUG_WIDTH;
-        var height_sqred = bugManager.BUG_HEIGHT * bugManager.BUG_HEIGHT;
-        var distance_sqred = width_sqred + height_sqred;
-        var distance_sqrt = Math.sqrt(distance_sqred);
         for (i = 0; i < bugManager.bugs.length; i++) {
             var currentBug = bugManager.bugs[i];
             if (!currentBug.alive) continue;
-            for (j = 0; j < bugManager.bugs.length; j++) {
+            for (j = i; j < bugManager.bugs.length; j++) {
+                // checking that it is not the same bug
+                if (i == j) continue;
                 var otherBug = bugManager.bugs[j];
                 if (!otherBug.alive) continue;
-                // checking that it is not the same bug
-                if (i != j) {
-                    //get distance between bugs.
-                    if (myPhysicLib.distanceBetween(currentBug, otherBug) < 60) {
-                        var lowerPriorityBug = bugManager.lessPriorityBug(currentBug,otherBug);
-                        var higherPriorityBug = bugManager.highPriorityBug(currentBug,otherBug);
-                        // if lower priority bug is on the left
-                        if(lowerPriorityBug.x < higherPriorityBug.x){
-                            lowerPriorityBug.x = lowerPriorityBug.x - 10;
-                            lowerPriorityBug.y = lowerPriorityBug.y - 10;
-                        }
-                        else if(lowerPriorityBug.x > higherPriorityBug.x){
-                            lowerPriorityBug.x = lowerPriorityBug.x + 10;
-                            lowerPriorityBug.y = lowerPriorityBug.y - 10;
-                        }
-                        else if(lowerPriorityBug.x == higherPriorityBug.x){
-                            lowerPriorityBug.x = lowerPriorityBug.x - 10;
-                            lowerPriorityBug.y = lowerPriorityBug.y - 10;
+                if (myPhysicLib.distanceBetween(currentBug, otherBug) > 60) continue;
+                //get distance between bugs.
+                var lowerPriorityBug = bugManager.lessPriorityBug(currentBug, otherBug);
+                var higherPriorityBug = bugManager.highPriorityBug(currentBug, otherBug);
+                // if lower priority bug is on the left
+                if(lowerPriorityBug.moveAway) continue;
+                lowerPriorityBug.moveAway = true;
+                if (lowerPriorityBug.x < higherPriorityBug.x) {
+                    //lowerPriorityBug.x = lowerPriorityBug.x - 10;
+                    lowerPriorityBug.time = 10;
+                    lowerPriorityBug.moveAwayDirection = -1;
 
-                        }
-                    }
-                    else {
-                        return;
-                    }
+                }
+                else if (lowerPriorityBug.x > higherPriorityBug.x) {
+                    //lowerPriorityBug.x = lowerPriorityBug.x + 10;
+                    lowerPriorityBug.time = 10;
+                    lowerPriorityBug.moveAwayDirection = 1;
                 }
             }
         }
     },
- /* Returns the bug with the lower priority.
-  */
+    /* Returns the bug with the lower priority.
+     */
     lessPriorityBug: function (firstBug, otherBug) {
         //different speed
-        if (bugManager.BUG_TYPE[firstBug.bugType].score < bugManager.BUG_TYPE[otherBug.bugType].score) {
+        var firstBugScore = bugManager.BUG_TYPE[firstBug.bugType].score,
+            otherBugScore = bugManager.BUG_TYPE[otherBug.bugType].score;
+        if (otherBugScore > firstBugScore) {
             return firstBug;
         }
-        else if (bugManager.BUG_TYPE[firstBug.bugType].score > bugManager.BUG_TYPE[otherBug.bugType].score) {
+        else if (otherBugScore < firstBugScore) {
             return otherBug;
         }
         //same speed 
-        else if (bugManager.BUG_TYPE[firstBug.bugType].score == bugManager.BUG_TYPE[otherBug.bugType].score) {
+        else if (otherBugScore == firstBugScore) {
             //if firstbug is on the right
             if (firstBug.x > otherBug.x) {
                 return otherBug;
@@ -280,14 +290,16 @@ var bugManager = {
     },
     highPriorityBug: function (firstBug, otherBug) {
         //different speed
-        if (bugManager.BUG_TYPE[firstBug.bugType].score > bugManager.BUG_TYPE[otherBug.bugType].score) {
+        var firstBugScore = bugManager.BUG_TYPE[firstBug.bugType].score,
+            otherBugScore = bugManager.BUG_TYPE[otherBug.bugType].score;
+        if (otherBugScore < firstBugScore) {
             return firstBug;
         }
-        else if (bugManager.BUG_TYPE[otherBug.bugType].score> bugManager.BUG_TYPE[firstBug.bugType].score) {
+        else if (otherBugScore > firstBugScore) {
             return otherBug;
         }
         //same speed 
-        else if (bugManager.BUG_TYPE[otherBug.bugType].score == bugManager.BUG_TYPE[firstBug.bugType].score) {
+        else if (otherBugScore == firstBugScore) {
             //if firstbug is on the right
             if (firstBug.x > otherBug.x) {
                 return firstBug;
