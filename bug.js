@@ -231,15 +231,22 @@ var bugManager = {
                 // checking that it is not the same bug
                 if (i != j) {
                     //get distance between bugs.
-                    if (myPhysicLib.distanceBetween(currentBug, otherBug) < distance_sqrt) {
-                        var lowerPriorityBug = bugManager.lessPriorityBug(firstBug,otherBug);
-                        var higherPriorityBug = bugManager.higherPriorityBug(firstBug,otherBug);
+                    if (myPhysicLib.distanceBetween(currentBug, otherBug) < 60) {
+                        var lowerPriorityBug = bugManager.lessPriorityBug(currentBug,otherBug);
+                        var higherPriorityBug = bugManager.highPriorityBug(currentBug,otherBug);
                         // if lower priority bug is on the left
                         if(lowerPriorityBug.x < higherPriorityBug.x){
-                            bugManager.lessPriorityBug(currentBug, otherBug).x = bugManager.lessPriorityBug(currentBug, otherBug).x - 10;
+                            lowerPriorityBug.x = lowerPriorityBug.x - 10;
+                            lowerPriorityBug.y = lowerPriorityBug.y - 10;
                         }
                         else if(lowerPriorityBug.x > higherPriorityBug.x){
-                            bugManager.lessPriorityBug(currentBug, otherBug).x = bugManager.lessPriorityBug(currentBug, otherBug).x + 10;
+                            lowerPriorityBug.x = lowerPriorityBug.x + 10;
+                            lowerPriorityBug.y = lowerPriorityBug.y - 10;
+                        }
+                        else if(lowerPriorityBug.x == higherPriorityBug.x){
+                            lowerPriorityBug.x = lowerPriorityBug.x - 10;
+                            lowerPriorityBug.y = lowerPriorityBug.y - 10;
+
                         }
                     }
                     else {
@@ -253,14 +260,14 @@ var bugManager = {
   */
     lessPriorityBug: function (firstBug, otherBug) {
         //different speed
-        if (firstBug.score < otherBug.score) {
+        if (bugManager.BUG_TYPE[firstBug.bugType].score < bugManager.BUG_TYPE[otherBug.bugType].score) {
             return firstBug;
         }
-        else if (firstBug.score > otherBug.score) {
+        else if (bugManager.BUG_TYPE[firstBug.bugType].score > bugManager.BUG_TYPE[otherBug.bugType].score) {
             return otherBug;
         }
         //same speed 
-        else if (firstBug.score == otherBug.score) {
+        else if (bugManager.BUG_TYPE[firstBug.bugType].score == bugManager.BUG_TYPE[otherBug.bugType].score) {
             //if firstbug is on the right
             if (firstBug.x > otherBug.x) {
                 return otherBug;
@@ -273,14 +280,14 @@ var bugManager = {
     },
     highPriorityBug: function (firstBug, otherBug) {
         //different speed
-        if (firstBug.score > otherBug.score) {
+        if (bugManager.BUG_TYPE[firstBug.bugType].score > bugManager.BUG_TYPE[otherBug.bugType].score) {
             return firstBug;
         }
-        else if (otherBug.score > firstBug.score) {
+        else if (bugManager.BUG_TYPE[otherBug.bugType].score> bugManager.BUG_TYPE[firstBug.bugType].score) {
             return otherBug;
         }
         //same speed 
-        else if (firstBug.score == otherBug.score) {
+        else if (bugManager.BUG_TYPE[otherBug.bugType].score == bugManager.BUG_TYPE[firstBug.bugType].score) {
             //if firstbug is on the right
             if (firstBug.x > otherBug.x) {
                 return firstBug;
