@@ -289,7 +289,7 @@ var bugManager = {
             }
         }
     },
-    /* Returns the bug with the lower priority.
+    /* Returns the bug with the higher priority.
      */
     highPriorityBug: function (firstBug, otherBug) {
         //different speed
