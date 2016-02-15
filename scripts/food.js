@@ -2,7 +2,7 @@ var foodManager = {
     FOOD_WIDTH: 40,
     FOOD_HEIGHT: 40,
     FOOD_COUNT: 5,
-    FOOD_IMG_URL: './Birthday_Cupcake_Drawing.png',
+    FOOD_IMG_URL: './images/Birthday_Cupcake_Drawing.png',
 
     allFood: [],
     foodImage: null,

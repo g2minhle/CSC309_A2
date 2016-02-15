@@ -9,7 +9,7 @@ https://css-tricks.com/snippets/css/media-queries-for-standard-devices*/
         height: 644px; /* canvas + infobar */
     	margin: 0 auto;
         border: solid;
-        background-image: url("./background.jpg");
+        background-image: url("./../images/background.jpg");
     }
 
     .title{
@@ -168,7 +168,7 @@ https://css-tricks.com/snippets/css/media-queries-for-standard-devices*/
         height: 644px; /* canvas + infobar */
         margin: 0 auto;
         border: solid;
-        background-image: url("./background.jpg");
+        background-image: url("./../images/background.jpg");
     }
 
     .title{
@@ -327,7 +327,7 @@ https://css-tricks.com/snippets/css/media-queries-for-standard-devices*/
         height: 644px; /* canvas + infobar */
         margin: 0 auto;
         border: solid;
-        background-image: url("./background.jpg");
+        background-image: url("./../images/background.jpg");
     }
 
     .title{
